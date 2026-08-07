@@ -18,22 +18,22 @@ main:
     # the second parameter to printf.
 
     la      a0, result_out
-    li	    a1,0xFADEFADE
+    li	    a1,0xFADECAFE
     call    printf
 
     la      a0, result_out
     li      s0,0xFFFFFFFF00000FFF #dedicated register
-    lui	    a1,0xFADEF 
-    ori     a1,a1,0x521 ## (0xFFF xor 0xADE)
+    lui	    a1,0xFADEC 
+    ori     a1,a1,0x501 ## (0xFFF xor 0xAFE)
     xor     a1,a1,s0
     call    printf
 
     la      a0, result_out
     lui	    a1,0x0FADE  # avoid setting high bit 
     slli    a1,a1,4
-    lui     a2,0x0FADE # so no sign extend
+    lui     a2,0x0CAFE # so no sign extend
     srli    a2,a2,12
-    add     a1,a1,a2
+    xor     a1,a1,a2
     call    printf
 
     la      a0, result_out
@@ -56,9 +56,9 @@ main:
     li	    a1,0x12341234
     call    printf
 
-#Result = 0xfadefade
-#Result = 0xfadefade
-#Result = 0xfadefade
+#Result = 0xfadecafe
+#Result = 0xfadecafe
+#Result = 0xfadecafe
 #Result = 0x12341234
 #Result = 0xdeadbeef
 #Result = 0xdeadbeef
