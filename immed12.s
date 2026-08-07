@@ -29,6 +29,14 @@ main:
     call    printf
 
     la      a0, result_out
+    lui	    a1,0x0FADE  # avoid setting high bit 
+    slli    a1,a1,4
+    lui     a2,0x0FADE # so no sign extend
+    srli    a2,a2,12
+    add     a1,a1,a2
+    call    printf
+
+    la      a0, result_out
     lui	    a1,0x12341
     xori    a1,a1,0x234
     call    printf
@@ -48,6 +56,7 @@ main:
     li	    a1,0x12341234
     call    printf
 
+#Result = 0xfadefade
 #Result = 0xfadefade
 #Result = 0xfadefade
 #Result = 0x12341234
