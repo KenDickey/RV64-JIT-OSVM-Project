@@ -19,6 +19,8 @@ main:
     # the second parameter to printf.
 
     li      s0,0xFFFFFFFF00000000 #dedicated register
+
+# 32-bit constant w high bit set -- sign extends
  
     la      a0,result_out
     lui     a1,0xFADED   # Notas Bene: Sign extended
@@ -32,6 +34,14 @@ main:
 ##Change 0x2 to 0xA in the executable via HexEdit
 ## to get full 12 bit immediate.
 # Result = 0xfadecafe
+
+# Get -1 in a register w 1 instruction
+
+    la      a0,result_out
+    addi    a1,x0,0x7FF  ##Change 0x7 to 0xF
+    call    printf
+
+# Result = 0xffffffffffffffff
 
     # Restore original RA and return
     ld      ra, 0(sp)
