@@ -5,7 +5,8 @@ Project Status: Early Days -- just started
 
 Game Plan: CogRV64Compiler code for VMMaker
 
-Test Environment is StarFive VisionFive v2 quad-core RV64 SoC
+Test Environment is StarFive VisionFive v2 quad-core RV64 SoC. 
+  https://www.amazon.com/VisionFive-RISC-V-JH7110-Quad-core-Application/dp/B0BGM1KQXQ
 
 OpenSmalltalk-VM stack interpreter builds fine on VisionFive v2 with current Debian Linux OSOA.
   https://github.com/starfive-tech/VisionFive2
