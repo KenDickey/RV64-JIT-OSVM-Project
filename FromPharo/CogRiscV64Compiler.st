@@ -1,4 +1,4 @@
-﻿'From Squeak6.2alpha of 15 October 2026 [latest update: #24052] on 19 October 2026 at 9:36:08 pm'!CogAbstractInstruction subclass: #CogRiscV64Compiler	instanceVariableNames: 'conditionOrNil previousOperands previousOpcode'	classVariableNames: 'AddCheckOverflowCqR AddCheckOverflowRR BrEqualRR BrFPEqualRR BrFPGreaterEqualRR BrFPGreaterRR BrFPLessEqualRR BrFPLessRR BrFPNotEqualRR BrLongEqualRR BrLongNotEqualRR BrNotEqualRR BrSignedGreaterEqualRR BrSignedGreaterRR BrSignedLessEqualRR BrSignedLessRR BrUnsignedGreaterEqualRR BrUnsignedGreaterRR BrUnsignedLessEqualRR BrUnsignedLessRR ConcreteCarryReg ConcreteIPFPReg ConcreteIPFPReg2 ConcreteIPReg ConcreteIPReg2 ConcreteIPReg3 ConcreteOverflowReg ConcretePCReg ConcreteSignReg ConcreteVarBaseReg ConcreteZeroReg DivRR EQ F0 F1 F2 F3 F4 F5 F6 F7 FP GE GEU LR LT LTU MSTATUS MulCheckOverflowRR MulRR NE PC RemRR SP SubCheckOverflowCqR SubCheckOverflowRR X0 X1 X10 X11 X12 X13 X14 X15 X16 X17 X18 X19 X2 X20 X21 X22 X23 X24 X25 X26 X27 X28 X29 X3 X30 X31 X4 X5 X6 X7 X8 X9'	poolDictionaries: 'CogAbstractRegisters'	category: 'VMMaker-JIT'!!CogRiscV64Compiler commentStamp: 'KenD 10/19/2026 11:48' prior: 0!CogRiscV64Compiler RiscV64 JIT for RV64gAdapted from from pharo-vm implementation (Thanks!!).  See :  CogRiscV64Compiler class license.!!CogRiscV64Compiler methodsFor: 'abi' stamp: 'KenD 16/Oct/2026 08:43:17'!cResultRegister
+﻿'From Squeak6.2alpha of 15 October 2026 [latest update: #24052] on 21 October 2026 at 3:01:07 pm'!CogAbstractInstruction subclass: #CogRiscV64Compiler	instanceVariableNames: 'conditionOrNil previousOperands previousOpcode'	classVariableNames: 'AddCheckOverflowCqR AddCheckOverflowRR BrEqualRR BrFPEqualRR BrFPGreaterEqualRR BrFPGreaterRR BrFPLessEqualRR BrFPLessRR BrFPNotEqualRR BrLongEqualRR BrLongNotEqualRR BrNotEqualRR BrSignedGreaterEqualRR BrSignedGreaterRR BrSignedLessEqualRR BrSignedLessRR BrUnsignedGreaterEqualRR BrUnsignedGreaterRR BrUnsignedLessEqualRR BrUnsignedLessRR ConcreteCarryReg ConcreteIPFPReg ConcreteIPFPReg2 ConcreteIPReg ConcreteIPReg2 ConcreteIPReg3 ConcreteOverflowReg ConcretePCReg ConcreteSignReg ConcreteVarBaseReg ConcreteZeroReg DivRR EQ F0 F1 F2 F3 F4 F5 F6 F7 FP GE GEU LR LT LTU MSTATUS MulCheckOverflowRR MulRR NE PC RemRR SP SubCheckOverflowCqR SubCheckOverflowRR X0 X1 X10 X11 X12 X13 X14 X15 X16 X17 X18 X19 X2 X20 X21 X22 X23 X24 X25 X26 X27 X28 X29 X3 X30 X31 X4 X5 X6 X7 X8 X9'	poolDictionaries: 'CogAbstractRegisters'	category: 'VMMaker-JIT'!!CogRiscV64Compiler commentStamp: 'KenD 10/19/2026 11:48' prior: 0!CogRiscV64Compiler RiscV64 JIT for RV64gAdapted from from pharo-vm implementation (Thanks!!).  See :  CogRiscV64Compiler class license.!!CogRiscV64Compiler methodsFor: 'abi' stamp: 'KenD 16/Oct/2026 08:43:17'!cResultRegister
 	"Answer the register through which C funcitons return integral results."
 	<inline: true>
 	^X10
@@ -2796,7 +2796,7 @@
 	self machineCodeAt: 0 put: (self fConvertLongSignedInRegister: X0 toDoublePrecisionInRegister: srcReg1).
 	^ machineCodeSize := 4
 	
-! !!CogRiscV64Compiler methodsFor: 'concretization' stamp: 'KenD 10/18/2026 12:19'!dispatchConcretize
+! !!CogRiscV64Compiler methodsFor: 'concretization' stamp: 'KenD 10/21/2026 14:41'!dispatchConcretize
 	"Attempt to generate concrete machine code for the instruction at address.
 	 This is the inner dispatch of concretizeAt: actualAddress which exists only
 	 to get around the branch size limits in the SqueakV3 (blue book derived)
@@ -2983,7 +2983,7 @@
 		[MoveRRd]			-> [ ^ self concretizeMoveRRd ].
 		
 		"Patcheable literal instruction"
-"		[ MovePatcheableC32R ] -> [ ^ self concretizeMovePatcheableC32R ]. "
+		[ MovePatcheableC32R ] -> [ ^ self concretizeMovePatcheableC32R ]. 
 
 		"SIMD Ops"
 "		[ DupRVr ] -> [ ^ self concretizeDupRVr ].
@@ -5416,7 +5416,7 @@
 	"Edit such that conditionOrNil is amongst the char size vars opcode machineCodeSize and maxSize."
 	^(super filteredInstVarNames copyWithout: 'conditionOrNil')
 		copyReplaceFrom: 5 to: 4 with: #('conditionOrNil')
-! !!CogRiscV64Compiler class methodsFor: 'translation' stamp: 'KenD 16/Oct/2026 08:43:17'!identifyingPredefinedMacros
+! !!CogRiscV64Compiler class methodsFor: 'translation' stamp: 'KenD 10/21/2026 06:40'!identifyingPredefinedMacros
 
 	"The possible preprocessor definitions are: (extracted from https://github.com/riscv-non-isa/riscv-toolchain-conventions)
 	__riscv: defined for any RISC-V target. Older versions of the GCC toolchain defined __riscv__.
@@ -5431,7 +5431,7 @@
 	__riscv_fdiv: defined when targeting the 'F' or 'D' ISA extensions and -mno-fdiv has not been used.
 	__riscv_fsqrt: defined when targeting the 'F' or 'D' ISA extensions and -mno-fdiv has not been used.
 	__riscv_compressed: defined when targeting the 'C' ISA extension.	"
-	^#('__riscv__' '__riscv')
+	^#('__riscv__' '__riscv'  '__riscv64__'  'RISCV64'  '__rv64g__' '__rv64gc__')
 ! !!CogRiscV64Compiler class methodsFor: 'translation' stamp: 'KenD 16/Oct/2026 08:43:17'!machineCodeDeclaration
 	"Answer the declaration for the machineCode array.
 	 ARM instructions are 32-bits in length."
